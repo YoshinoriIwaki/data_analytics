@@ -67,4 +67,21 @@ click.data.cast <- as.data.frame(
 click.data.cast$total <- rowSums(click.data.cast[, -1])
 head(click.data.cast, 2)
 
-)
+#ex9
+click.data.cast1 <- click.data.cast
+keys <- names(click.data.cast1)[-c(1, ncol(click.data.cast1))]
+click.data.cast1 <- ykmeans(click.data.cast1, keys, "total", 3:6)
+table(click.data.cast1$cluster)
+
+#ex10
+library(reshape2)
+click.data.cast.cluster1.melt <- melt(
+  click.data.cast1$cluster1,
+  id.vars = c("user.id", "cluster"),
+  measure.vars = keys)
+
+click.cluster1.summary <-
+  click.data.cast.cluster1.melt %>%
+  #group_by(cluster, variable) %>%
+  summarise(value = mean(value)) %>%
+  as.data.frame()
